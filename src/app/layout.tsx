@@ -18,36 +18,34 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Agentic Coding Boilerplate",
-    template: "%s | Agentic Coding Boilerplate",
+    default: "AIVenger - AI-Powered Avatar Creation",
+    template: "%s | AIVenger",
   },
   description:
-    "Complete agentic coding boilerplate with authentication, database, AI integration, and modern tooling - perfect for building AI-powered applications and autonomous agents by Leon van Zyl",
+    "Create stunning, personalized superhero avatars powered by advanced AI. Transform yourself into the hero you were meant to be with AIVenger.",
   keywords: [
-    "Next.js",
-    "React",
-    "TypeScript",
-    "AI",
-    "OpenRouter",
-    "Boilerplate",
-    "Authentication",
-    "PostgreSQL",
+    "AI Avatar",
+    "Superhero Avatar",
+    "Avatar Creator",
+    "AI-Powered",
+    "Avatar Generation",
+    "Digital Avatar",
+    "Hero Avatar",
+    "Character Creation",
   ],
-  authors: [{ name: "Leon van Zyl" }],
-  creator: "Leon van Zyl",
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "Agentic Coding Boilerplate",
-    title: "Agentic Coding Boilerplate",
+    siteName: "AIVenger",
+    title: "AIVenger - AI-Powered Avatar Creation",
     description:
-      "Complete agentic coding boilerplate with authentication, database, AI integration, and modern tooling",
+      "Create stunning, personalized superhero avatars powered by advanced AI",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Agentic Coding Boilerplate",
+    title: "AIVenger - AI-Powered Avatar Creation",
     description:
-      "Complete agentic coding boilerplate with authentication, database, AI integration, and modern tooling",
+      "Create stunning, personalized superhero avatars powered by advanced AI",
   },
   robots: {
     index: true,
@@ -59,19 +57,15 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "Agentic Coding Boilerplate",
+  name: "AIVenger",
   description:
-    "Complete agentic coding boilerplate with authentication, database, AI integration, and modern tooling",
-  applicationCategory: "DeveloperApplication",
+    "Create stunning, personalized superhero avatars powered by advanced AI",
+  applicationCategory: "MultimediaApplication",
   operatingSystem: "Any",
   offers: {
     "@type": "Offer",
     price: "0",
     priceCurrency: "USD",
-  },
-  author: {
-    "@type": "Person",
-    name: "Leon van Zyl",
   },
 };
 

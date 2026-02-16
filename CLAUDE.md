@@ -1,3 +1,7 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 # Agentic Coding Boilerplate - AI Assistant Guidelines
 
 ## Project Overview
@@ -76,7 +80,9 @@ src/
     ├── auth-client.ts           # Better Auth client hooks
     ├── db.ts                    # Database connection
     ├── schema.ts                # Drizzle schema (users, sessions, etc.)
+    ├── session.ts               # Session management utilities
     ├── storage.ts               # File storage abstraction (Vercel Blob / local)
+    ├── env.ts                   # Environment variable validation
     └── utils.ts                 # Utility functions (cn, etc.)
 ```
 
@@ -104,20 +110,37 @@ BLOB_READ_WRITE_TOKEN=  # Leave empty for local dev, set for Vercel Blob in prod
 
 ## Available Scripts
 
+**Note**: This project uses `pnpm` as the package manager. Use `pnpm` instead of `npm` when running scripts.
+
 ```bash
-npm run dev          # Start dev server (DON'T run this yourself - ask user)
-npm run build        # Build for production (runs db:migrate first)
-npm run build:ci     # Build without database (for CI/CD pipelines)
-npm run start        # Start production server
-npm run lint         # Run ESLint (ALWAYS run after changes)
-npm run typecheck    # TypeScript type checking (ALWAYS run after changes)
-npm run db:generate  # Generate database migrations
-npm run db:migrate   # Run database migrations
-npm run db:push      # Push schema changes to database
-npm run db:studio    # Open Drizzle Studio (database GUI)
-npm run db:dev       # Push schema for development
-npm run db:reset     # Reset database (drop all tables)
+pnpm dev          # Start dev server (DON'T run this yourself - ask user)
+pnpm build        # Build for production (runs db:migrate first)
+pnpm build:ci     # Build without database (for CI/CD pipelines)
+pnpm start        # Start production server
+pnpm lint         # Run ESLint (ALWAYS run after changes)
+pnpm typecheck    # TypeScript type checking (ALWAYS run after changes)
+pnpm check        # Run both lint and typecheck (RECOMMENDED after changes)
+pnpm format       # Format code with Prettier
+pnpm format:check # Check code formatting
+pnpm db:generate  # Generate database migrations
+pnpm db:migrate   # Run database migrations
+pnpm db:push      # Push schema changes to database
+pnpm db:studio    # Open Drizzle Studio (database GUI)
+pnpm db:dev       # Push schema for development
+pnpm db:reset     # Reset database (drop all tables)
 ```
+
+## Claude Code Skills
+
+This project includes custom Claude Code skills in `.claude/commands/`:
+
+- `/create-spec` - Create a new feature specification with requirements and implementation plan
+- `/publish-to-github` - Publish a feature specification to GitHub Issues and Projects
+- `/continue-feature` - Continue implementing the next task for a GitHub-published feature
+- `/checkpoint` - Create a commit with detailed comment
+- `/review-pr` - Review pull requests
+
+See README.md for detailed workflow documentation on using these skills.
 
 ## Documentation Files
 
@@ -136,13 +159,15 @@ The project includes technical documentation in `docs/`:
 1. **ALWAYS run lint and typecheck** after completing changes:
 
    ```bash
-   npm run lint && npm run typecheck
+   pnpm check
+   # or separately:
+   pnpm lint && pnpm typecheck
    ```
 
 2. **NEVER start the dev server yourself**
 
    - If you need dev server output, ask the user to provide it
-   - Don't run `npm run dev` or `pnpm dev`
+   - Don't run `pnpm dev` or `npm run dev`
 
 3. **Use OpenRouter, NOT OpenAI directly**
 
@@ -186,11 +211,19 @@ The project includes technical documentation in `docs/`:
    - Support both light and dark modes
    - Use TypeScript with proper types
 
-9. **API Routes**
-   - Follow Next.js 16 App Router conventions
-   - Use Route Handlers (route.ts files)
-   - Return Response objects
-   - Handle errors appropriately
+9. **TypeScript**
+
+   - This project uses **very strict TypeScript configuration**
+   - All strict mode flags are enabled (strictNullChecks, noImplicitAny, etc.)
+   - Additional strict checks: `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noUnusedLocals`, `noUnusedParameters`
+   - Always handle potential undefined/null cases when accessing arrays or optional properties
+   - Environment variables are validated via `src/lib/env.ts`
+
+10. **API Routes**
+    - Follow Next.js 16 App Router conventions
+    - Use Route Handlers (route.ts files)
+    - Return Response objects
+    - Handle errors appropriately
 
 ### Best Practices
 
@@ -241,10 +274,3 @@ The project includes technical documentation in `docs/`:
 3. Delete files: `await deleteFile(result.url)`
 4. Storage automatically uses local filesystem in dev, Vercel Blob in production
 5. Local files are saved to `public/uploads/` and served at `/uploads/`
-
-## Package Manager
-
-This project uses **pnpm** (see `pnpm-lock.yaml`). When running commands:
-
-- Use `pnpm` instead of `npm` when possible
-- Scripts defined in package.json work with `pnpm run [script]`
