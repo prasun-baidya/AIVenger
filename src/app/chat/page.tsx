@@ -247,7 +247,12 @@ export default function ChatPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-6 pb-4 border-b">
-          <h1 className="text-2xl font-bold">AI Chat</h1>
+          <div>
+            <h1 className="text-2xl font-bold">AI Superhero Assistant</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Get tips and advice about superhero styles and transformations
+            </p>
+          </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">
               Welcome, {session.user.name}!
@@ -270,8 +275,88 @@ export default function ChatPage() {
 
         <div className="min-h-[50vh] overflow-y-auto space-y-4 mb-4">
           {messages.length === 0 && (
-            <div className="text-center text-muted-foreground py-12">
-              Start a conversation with AI
+            <div className="text-center py-12">
+              <p className="text-muted-foreground mb-6">
+                Ask me anything about superhero styles and transformations!
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto">
+                <button
+                  onClick={() =>
+                    sendMessage({
+                      role: "user",
+                      parts: [
+                        {
+                          type: "text",
+                          text: "What makes a great superhero photo?",
+                        },
+                      ],
+                    })
+                  }
+                  className="p-4 text-left border rounded-lg hover:bg-muted transition-colors"
+                >
+                  <p className="font-medium text-sm mb-1">Photo Tips</p>
+                  <p className="text-xs text-muted-foreground">
+                    What makes a great superhero photo?
+                  </p>
+                </button>
+                <button
+                  onClick={() =>
+                    sendMessage({
+                      role: "user",
+                      parts: [
+                        {
+                          type: "text",
+                          text: "What are popular superhero styles?",
+                        },
+                      ],
+                    })
+                  }
+                  className="p-4 text-left border rounded-lg hover:bg-muted transition-colors"
+                >
+                  <p className="font-medium text-sm mb-1">Style Guide</p>
+                  <p className="text-xs text-muted-foreground">
+                    What are popular superhero styles?
+                  </p>
+                </button>
+                <button
+                  onClick={() =>
+                    sendMessage({
+                      role: "user",
+                      parts: [
+                        {
+                          type: "text",
+                          text: "How can I get the best transformation results?",
+                        },
+                      ],
+                    })
+                  }
+                  className="p-4 text-left border rounded-lg hover:bg-muted transition-colors"
+                >
+                  <p className="font-medium text-sm mb-1">Best Results</p>
+                  <p className="text-xs text-muted-foreground">
+                    How can I get the best transformation?
+                  </p>
+                </button>
+                <button
+                  onClick={() =>
+                    sendMessage({
+                      role: "user",
+                      parts: [
+                        {
+                          type: "text",
+                          text: "Can I transform my pet into a superhero?",
+                        },
+                      ],
+                    })
+                  }
+                  className="p-4 text-left border rounded-lg hover:bg-muted transition-colors"
+                >
+                  <p className="font-medium text-sm mb-1">Pet Heroes</p>
+                  <p className="text-xs text-muted-foreground">
+                    Can I transform my pet?
+                  </p>
+                </button>
+              </div>
             </div>
           )}
           {messages.map((message) => {

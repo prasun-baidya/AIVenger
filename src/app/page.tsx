@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Sparkles, Zap, Users, Shield, ArrowRight, Star } from "lucide-react";
+import { BeforeAfterShowcase } from "@/components/before-after-showcase";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -57,6 +58,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Before/After Showcase */}
+      <BeforeAfterShowcase />
 
       {/* Features Section */}
       <section className="border-t bg-muted/30">
@@ -128,9 +132,9 @@ export default function Home() {
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
                   1
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Sign Up Free</h3>
+                <h3 className="text-xl font-semibold mb-2">Upload Your Photo</h3>
                 <p className="text-muted-foreground">
-                  Create your account in seconds. No credit card required to start.
+                  Upload a photo of yourself, friends, family, or even your pet to transform.
                 </p>
                 {/* Arrow */}
                 <div className="hidden md:block absolute top-8 -right-4 text-muted-foreground">
@@ -143,9 +147,9 @@ export default function Home() {
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
                   2
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Customize Your Hero</h3>
+                <h3 className="text-xl font-semibold mb-2">AI Transforms</h3>
                 <p className="text-muted-foreground">
-                  Choose your style, powers, and personality traits to define your avatar.
+                  Watch as advanced AI transforms your photo into an epic superhero avatar.
                 </p>
                 {/* Arrow */}
                 <div className="hidden md:block absolute top-8 -right-4 text-muted-foreground">
@@ -158,9 +162,9 @@ export default function Home() {
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-500 to-red-500 flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
                   3
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Generate & Download</h3>
+                <h3 className="text-xl font-semibold mb-2">Download Result</h3>
                 <p className="text-muted-foreground">
-                  Watch AI create your perfect avatar. Download and use it anywhere.
+                  Get your amazing superhero transformation and share it with the world!
                 </p>
               </div>
             </div>

@@ -6,23 +6,14 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { signIn, useSession } from "@/lib/auth-client"
+import { signIn } from "@/lib/auth-client"
 
 export function SignInButton() {
-  const { data: session, isPending: sessionPending } = useSession()
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [isPending, setIsPending] = useState(false)
-
-  if (sessionPending) {
-    return <Button disabled>Loading...</Button>
-  }
-
-  if (session) {
-    return null
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
