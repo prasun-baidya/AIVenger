@@ -12,19 +12,7 @@ A complete agentic coding boilerplate with authentication, PostgreSQL database, 
 - **⚡ Modern Stack**: Next.js 16, React 19, TypeScript
 - **📱 Responsive**: Mobile-first design approach
 
-## 🎥 Video Tutorial
 
-Watch the complete walkthrough of this agentic coding template:
-
-[![Agentic Coding Boilerplate Tutorial](https://img.youtube.com/vi/JQ86N3WOAh4/maxresdefault.jpg)](https://youtu.be/JQ86N3WOAh4)
-
-<a href="https://youtu.be/JQ86N3WOAh4" target="_blank" rel="noopener noreferrer">🔗 Watch on YouTube</a>
-
-## ☕ Support This Project
-
-If this boilerplate helped you build something awesome, consider buying me a coffee!
-
-[![Buy me a coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/leonvanzyl)
 
 ## 📋 Prerequisites
 
