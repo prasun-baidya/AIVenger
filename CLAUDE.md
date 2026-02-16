@@ -73,8 +73,7 @@ src/
 │   ├── site-header.tsx          # Main navigation header
 │   ├── site-footer.tsx          # Footer component
 │   ├── theme-provider.tsx       # Dark mode provider
-│   ├── setup-checklist.tsx      # Setup guide component
-│   └── starter-prompt-modal.tsx # Starter prompts modal
+│   └── before-after-showcase.tsx # Before/After image comparison slider
 └── lib/
     ├── auth.ts                  # Better Auth server config
     ├── auth-client.ts           # Better Auth client hooks
@@ -150,7 +149,7 @@ The project includes technical documentation in `docs/`:
 - `docs/technical/ai/structured-data.md` - Structured data extraction
 - `docs/technical/react-markdown.md` - Markdown rendering guide
 - `docs/technical/betterauth/polar.md` - Polar payment integration
-- `docs/business/starter-prompt.md` - Business context for AI prompts
+- `docs/before-after-showcase.md` - Before/After showcase component guide
 
 ## Guidelines for AI Assistants
 
