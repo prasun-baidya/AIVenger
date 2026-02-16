@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { Lock, Image as ImageIcon } from "lucide-react";
+import { toast } from "sonner";
 import { UserProfile } from "@/components/auth/user-profile";
 import { EmptyState } from "@/components/empty-state";
 import { GalleryItem } from "@/components/gallery-item";
 import { useSession } from "@/lib/auth-client";
-import { getGenerations, deleteGeneration } from "@/lib/storage-helpers";
 import type { GenerationData } from "@/types/generation";
 
 export default function GalleryPage() {
@@ -20,11 +20,14 @@ export default function GalleryPage() {
     }
   }, [session]);
 
-  const loadGenerations = () => {
+  const loadGenerations = async () => {
     setIsLoading(true);
     try {
-      const allGenerations = getGenerations();
-      setGenerations(allGenerations);
+      const response = await fetch("/api/generations?status=completed");
+      if (response.ok) {
+        const data = await response.json();
+        setGenerations(data.generations);
+      }
     } catch (error) {
       console.error("Error loading generations:", error);
     } finally {
@@ -32,12 +35,21 @@ export default function GalleryPage() {
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     try {
-      deleteGeneration(id);
-      loadGenerations(); // Reload after deletion
+      const response = await fetch(`/api/generations/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        toast.success("Generation deleted successfully");
+        loadGenerations();
+      } else {
+        toast.error("Failed to delete generation");
+      }
     } catch (error) {
-      console.error("Error deleting generation:", error);
+      console.error("Error deleting:", error);
+      toast.error("Failed to delete generation");
     }
   };
 

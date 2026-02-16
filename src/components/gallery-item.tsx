@@ -27,7 +27,11 @@ export function GalleryItem({ generation, onDelete }: GalleryItemProps) {
 
   const handleDownload = () => {
     try {
-      // For demo with data URLs, create a download link
+      if (!generation.generatedImageUrl) {
+        toast.error("No generated image available");
+        return;
+      }
+      // Create a download link
       const link = document.createElement("a");
       link.href = generation.generatedImageUrl;
       link.download = `superhero-${generation.id}.png`;
@@ -67,11 +71,17 @@ export function GalleryItem({ generation, onDelete }: GalleryItemProps) {
             </div>
           </div>
           <div className="aspect-square relative bg-muted">
-            <img
-              src={generation.generatedImageUrl}
-              alt="Superhero transformation"
-              className="w-full h-full object-cover"
-            />
+            {generation.generatedImageUrl ? (
+              <img
+                src={generation.generatedImageUrl}
+                alt="Superhero transformation"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                Processing...
+              </div>
+            )}
             <div className="absolute bottom-2 left-2 px-2 py-1 bg-primary/90 text-primary-foreground text-xs rounded">
               Superhero
             </div>

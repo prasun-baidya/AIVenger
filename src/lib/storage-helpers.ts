@@ -29,12 +29,18 @@ export function getGenerations(): GenerationData[] {
 
 /**
  * Add a new generation to localStorage
+ * @deprecated Use generateAvatar server action instead
  */
-export function addGeneration(data: Omit<GenerationData, "id">): GenerationData {
+export function addGeneration(
+  data: Omit<GenerationData, "id" | "creditsUsed" | "updatedAt">
+): GenerationData {
+  const now = new Date();
   const newGeneration: GenerationData = {
     ...data,
     id: `gen_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-    createdAt: new Date(),
+    creditsUsed: 10,
+    createdAt: now,
+    updatedAt: now,
   };
 
   try {
@@ -71,33 +77,36 @@ export function deleteGeneration(id: string): void {
 
 /**
  * Get user statistics
+ * @deprecated Use /api/user/stats instead
  */
 export function getStats(): UserStats {
   if (typeof window === "undefined") {
-    return { totalGenerations: 0 };
+    return { totalGenerations: 0, credits: 0 };
   }
 
   try {
     const stored = localStorage.getItem(STORAGE_KEYS.USER_STATS);
     if (!stored) {
-      return { totalGenerations: 0 };
+      return { totalGenerations: 0, credits: 0 };
     }
 
     const parsed = JSON.parse(stored);
     return {
       ...parsed,
+      credits: parsed.credits ?? 0,
       lastGenerationDate: parsed.lastGenerationDate
         ? new Date(parsed.lastGenerationDate)
         : undefined,
     };
   } catch (error) {
     console.error("Error reading stats from localStorage:", error);
-    return { totalGenerations: 0 };
+    return { totalGenerations: 0, credits: 0 };
   }
 }
 
 /**
  * Update statistics based on current generations
+ * @deprecated Use /api/user/stats instead
  */
 function updateStats(): void {
   try {
@@ -113,6 +122,7 @@ function updateStats(): void {
 
     const stats: UserStats = {
       totalGenerations: completedGenerations.length,
+      credits: 0,
       ...(lastDate && { lastGenerationDate: lastDate }),
     };
 

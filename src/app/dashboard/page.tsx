@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Lock, Image as ImageIcon, Zap, MessageSquare } from "lucide-react";
+import { Lock, Image as ImageIcon, Zap, MessageSquare, Coins } from "lucide-react";
 import { toast } from "sonner";
+import { generateAvatar } from "@/app/actions/generate-avatar";
 import { UserProfile } from "@/components/auth/user-profile";
 import { EmptyState } from "@/components/empty-state";
 import { GenerationLoading } from "@/components/generation-loading";
@@ -11,22 +12,19 @@ import { ImageUpload } from "@/components/image-upload";
 import { StatsCard } from "@/components/stats-card";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
-import {
-  addGeneration,
-  getGenerations,
-  getStats,
-} from "@/lib/storage-helpers";
 import type { GenerationData } from "@/types/generation";
 
 export default function DashboardPage() {
   const { data: session, isPending } = useSession();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [recentGenerations, setRecentGenerations] = useState<GenerationData[]>(
     []
   );
-  const [stats, setStats] = useState({ totalGenerations: 0 });
+  const [stats, setStats] = useState({
+    totalGenerations: 0,
+    credits: 30,
+  });
 
   useEffect(() => {
     if (session) {
@@ -35,53 +33,90 @@ export default function DashboardPage() {
     }
   }, [session]);
 
-  const loadRecentGenerations = () => {
-    const generations = getGenerations();
-    setRecentGenerations(generations.slice(0, 3)); // Show 3 most recent
+  const loadRecentGenerations = async () => {
+    try {
+      const response = await fetch("/api/generations?status=completed&limit=3");
+      if (response.ok) {
+        const data = await response.json();
+        setRecentGenerations(data.generations);
+      }
+    } catch (error) {
+      console.error("Failed to load recent generations:", error);
+    }
   };
 
-  const loadStats = () => {
-    const userStats = getStats();
-    setStats(userStats);
+  const loadStats = async () => {
+    try {
+      const response = await fetch("/api/user/stats");
+      if (response.ok) {
+        const data = await response.json();
+        setStats({
+          totalGenerations: data.totalGenerations,
+          credits: data.credits,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load stats:", error);
+    }
   };
 
-  const handleImageSelect = (file: File, preview: string) => {
+  const handleImageSelect = (file: File) => {
     setSelectedFile(file);
-    setPreviewUrl(preview);
   };
 
   const handleGenerate = async () => {
-    if (!selectedFile || !previewUrl || !session) return;
+    if (!selectedFile || !session) return;
+
+    // Client-side credit check for UX
+    if (stats.credits < 10) {
+      toast.error("Insufficient credits", {
+        description: "You need 10 credits. Upgrade your plan to continue.",
+        action: {
+          label: "View Plans",
+          onClick: () => (window.location.href = "/pricing"),
+        },
+      });
+      return;
+    }
 
     setIsGenerating(true);
 
     try {
-      // Simulate AI generation (3-5 seconds)
-      await new Promise((resolve) =>
-        setTimeout(resolve, 3000 + Math.random() * 2000)
-      );
+      const formData = new FormData();
+      formData.append("image", selectedFile);
 
-      // For demo: use the uploaded image as both original and generated
-      addGeneration({
-        userId: session.user.id,
-        originalImageUrl: previewUrl,
-        generatedImageUrl: previewUrl,
-        status: "completed",
-        createdAt: new Date(),
+      const result = await generateAvatar(formData);
+
+      if (!result.success) {
+        if (result.code === "INSUFFICIENT_CREDITS") {
+          toast.error("Insufficient Credits", {
+            description: result.error,
+            action: {
+              label: "View Plans",
+              onClick: () => (window.location.href = "/pricing"),
+            },
+          });
+        } else {
+          toast.error("Generation Failed", { description: result.error });
+        }
+        return;
+      }
+
+      toast.success("Superhero transformation complete!", {
+        description: `${result.remainingCredits} credits remaining`,
       });
 
-      toast.success("Superhero transformation complete!");
+      setStats((prev) => ({
+        ...prev,
+        credits: result.remainingCredits,
+        totalGenerations: prev.totalGenerations + 1,
+      }));
 
-      // Reset form
       setSelectedFile(null);
-      setPreviewUrl(null);
-
-      // Reload recent generations and stats
-      loadRecentGenerations();
-      loadStats();
+      await loadRecentGenerations();
     } catch (error) {
       console.error("Generation error:", error);
-      toast.error("Failed to generate superhero avatar. Please try again.");
+      toast.error("Failed to generate. Please try again.");
     } finally {
       setIsGenerating(false);
     }
@@ -137,12 +172,12 @@ export default function DashboardPage() {
               <ImageUpload onImageSelect={handleImageSelect} />
               <Button
                 onClick={handleGenerate}
-                disabled={!selectedFile}
+                disabled={!selectedFile || stats.credits < 10}
                 className="w-full"
                 size="lg"
               >
                 <Zap className="mr-2 h-5 w-5" />
-                Generate Superhero Avatar
+                Generate Superhero Avatar (10 credits)
               </Button>
             </div>
           )}
@@ -151,6 +186,15 @@ export default function DashboardPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatsCard
+          label="Available Credits"
+          value={stats.credits}
+          icon={<Coins className="h-4 w-4" />}
+          href="/pricing"
+          description={
+            stats.credits < 10 ? "Get more credits" : "Use for generations"
+          }
+        />
         <StatsCard
           label="Total Transformations"
           value={stats.totalGenerations}
@@ -164,12 +208,6 @@ export default function DashboardPage() {
           icon={<MessageSquare className="h-4 w-4" />}
           href="/chat"
           description="Get superhero style tips"
-        />
-        <StatsCard
-          label="Account Status"
-          value="Active"
-          icon={<Zap className="h-4 w-4" />}
-          description="All systems ready"
         />
       </div>
 
@@ -199,11 +237,17 @@ export default function DashboardPage() {
                 className="group border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all"
               >
                 <div className="aspect-square relative">
-                  <img
-                    src={gen.generatedImageUrl}
-                    alt="Generated superhero"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                  />
+                  {gen.generatedImageUrl ? (
+                    <img
+                      src={gen.generatedImageUrl}
+                      alt="Generated superhero"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
+                      Processing...
+                    </div>
+                  )}
                 </div>
                 <div className="p-3">
                   <p className="text-sm text-muted-foreground">

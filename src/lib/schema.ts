@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, index, integer } from "drizzle-orm/pg-core";
 
 // IMPORTANT! ID fields should ALWAYS use UUID types, EXCEPT the BetterAuth tables.
 
@@ -11,6 +11,7 @@ export const user = pgTable(
     email: text("email").notNull().unique(),
     emailVerified: boolean("email_verified").default(false).notNull(),
     image: text("image"),
+    credits: integer("credits").default(30).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
@@ -80,3 +81,32 @@ export const verification = pgTable("verification", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
+
+export const generation = pgTable(
+  "generation",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => `gen_${Date.now()}_${crypto.randomUUID()}`),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    originalImageUrl: text("original_image_url").notNull(),
+    generatedImageUrl: text("generated_image_url"),
+    creditsUsed: integer("credits_used").default(10).notNull(),
+    status: text("status", { enum: ["pending", "completed", "failed"] })
+      .default("pending")
+      .notNull(),
+    errorMessage: text("error_message"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("generation_user_id_idx").on(table.userId),
+    index("generation_status_idx").on(table.status),
+    index("generation_created_at_idx").on(table.createdAt),
+  ]
+);
