@@ -221,19 +221,27 @@ function generateRandomSuperheroPrompt(): string {
   const background = BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
   const lighting = LIGHTING_STYLES[Math.floor(Math.random() * LIGHTING_STYLES.length)];
 
-  return `Transform this person into a unique superhero character - a ${theme}. Preserve their facial features and identity while creating:
+  return `CRITICAL: You MUST preserve this person's exact facial features, face shape, skin tone, and identity. This is the MOST IMPORTANT requirement.
 
-COSTUME: Design a ${costume} with ${colors} color scheme. Make it distinctive and memorable with iconic design elements.
+Transform this person into a unique superhero character - a ${theme}. Keep their face EXACTLY as it appears in the photo.
+
+FACE PRESERVATION (CRITICAL):
+- Keep the EXACT same face, facial structure, eyes, nose, mouth, jawline, and skin tone
+- This person's face must be 100% recognizable and identical to the original
+- Only add the superhero costume and effects around the face, not on the face itself
+- Do NOT change their facial features, expressions, or appearance in ANY way
+
+COSTUME: Design a ${costume} with ${colors} color scheme around the person's body (not face).
 
 POSE: Show them in a ${pose}, conveying power and heroism.
 
 BACKGROUND: Set against ${background}, creating an epic atmosphere.
 
-LIGHTING: Use ${lighting} to create dramatic depth and cinematic quality.
+LIGHTING: Use ${lighting} to create dramatic depth while keeping the face clearly visible and recognizable.
 
 STYLE: Professional comic book or movie poster aesthetic with photorealistic rendering. Maintain the original aspect ratio.
 
-IMPORTANT: Keep the person's face recognizable while making them look absolutely epic and heroic.`;
+REMEMBER: The person's face must look EXACTLY like the original photo. Only add superhero elements to their body, costume, and surroundings.`;
 }
 
 /**
