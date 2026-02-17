@@ -137,6 +137,105 @@ export async function generateAvatar(
   }
 }
 
+// Superhero theme variations for randomization
+const SUPERHERO_THEMES = [
+  "tech-powered cyborg hero with neon circuits and holographic effects",
+  "mystic sorcerer with glowing runes and magical energy",
+  "cosmic warrior with galaxy patterns and stellar powers",
+  "elemental master controlling fire, ice, lightning, or earth",
+  "shadow assassin with dark, sleek tactical gear",
+  "speedster with lightning trails and motion blur effects",
+  "tank hero with heavy armor and incredible strength",
+  "nature guardian with organic, plant-based powers",
+  "time manipulator with clockwork and temporal distortion effects",
+  "psychic hero with mind-bending aura and telekinetic energy",
+];
+
+const COSTUME_STYLES = [
+  "sleek and modern with metallic accents",
+  "classic comic book style with bold colors and cape",
+  "armored and tactical with high-tech details",
+  "flowing and ethereal with energy trails",
+  "cyberpunk-inspired with glowing elements",
+  "medieval fantasy with mystical runes",
+  "futuristic nano-suit with reactive surfaces",
+  "organic bio-armor with natural textures",
+];
+
+const COLOR_SCHEMES = [
+  "electric blue and silver",
+  "crimson red and gold",
+  "emerald green and black",
+  "purple and cosmic violet",
+  "orange and flame accents",
+  "ice blue and white",
+  "shadow black and deep purple",
+  "golden yellow and bronze",
+  "teal and aquamarine",
+  "magenta and electric pink",
+];
+
+const POSES = [
+  "heroic landing pose with one knee down",
+  "powerful standing pose with arms crossed",
+  "dynamic action pose mid-leap",
+  "confident battle-ready stance",
+  "energy-charging pose with glowing hands raised",
+  "dramatic cape-billowing pose",
+  "intimidating power pose from low angle",
+  "graceful aerial pose",
+];
+
+const BACKGROUNDS = [
+  "futuristic cityscape at night with neon lights",
+  "destroyed battlefield with debris and smoke",
+  "cosmic space with nebulas and stars",
+  "stormy sky with dramatic lightning",
+  "high-tech laboratory with glowing screens",
+  "ancient temple ruins with mystical atmosphere",
+  "rooftop overlooking a sprawling city at sunset",
+  "portal or dimensional rift with energy swirls",
+  "arena with epic stadium lighting",
+  "apocalyptic wasteland with dramatic clouds",
+];
+
+const LIGHTING_STYLES = [
+  "dramatic rim lighting with strong backlight",
+  "cinematic side lighting with deep shadows",
+  "heroic uplighting from below",
+  "volumetric god rays from above",
+  "neon color grading with cyberpunk vibes",
+  "golden hour warm tones",
+  "cool blue moonlight atmosphere",
+  "high-contrast comic book lighting",
+];
+
+/**
+ * Generate a randomized superhero transformation prompt
+ */
+function generateRandomSuperheroPrompt(): string {
+  const theme = SUPERHERO_THEMES[Math.floor(Math.random() * SUPERHERO_THEMES.length)];
+  const costume = COSTUME_STYLES[Math.floor(Math.random() * COSTUME_STYLES.length)];
+  const colors = COLOR_SCHEMES[Math.floor(Math.random() * COLOR_SCHEMES.length)];
+  const pose = POSES[Math.floor(Math.random() * POSES.length)];
+  const background = BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
+  const lighting = LIGHTING_STYLES[Math.floor(Math.random() * LIGHTING_STYLES.length)];
+
+  return `Transform this person into a unique superhero character - a ${theme}. Preserve their facial features and identity while creating:
+
+COSTUME: Design a ${costume} with ${colors} color scheme. Make it distinctive and memorable with iconic design elements.
+
+POSE: Show them in a ${pose}, conveying power and heroism.
+
+BACKGROUND: Set against ${background}, creating an epic atmosphere.
+
+LIGHTING: Use ${lighting} to create dramatic depth and cinematic quality.
+
+STYLE: Professional comic book or movie poster aesthetic with photorealistic rendering. Maintain the original aspect ratio.
+
+IMPORTANT: Keep the person's face recognizable while making them look absolutely epic and heroic.`;
+}
+
 /**
  * Call OpenRouter API with Gemini 2.5 Flash Image model
  * @param imageBuffer - Buffer containing the original image data
@@ -152,21 +251,14 @@ async function callOpenRouterImageGeneration(
     throw new Error("OPENROUTER_API_KEY not configured");
   }
 
-  const MODEL = "google/gemini-2.5-flash-image";
+  const MODEL = process.env.OPENROUTER_MODEL || "google/gemini-2.5-flash-image";
 
   // Convert buffer to base64 data URI
   const base64Image = imageBuffer.toString("base64");
   const dataUri = `data:${mimeType};base64,${base64Image}`;
 
-  // Detailed narrative prompt (not keyword list)
-  const prompt = `Transform this person into an epic superhero character. Preserve their facial features and identity while adding:
-- A heroic costume with bold colors and iconic design elements
-- Dramatic cinematic lighting with strong contrast and depth
-- A powerful, confident pose that conveys strength and heroism
-- Dynamic background with energy effects or cityscape
-- Professional comic book or movie poster aesthetic
-
-Maintain the original aspect ratio. Create a stunning, photorealistic superhero transformation that stays true to the person's appearance.`;
+  // Generate a randomized superhero prompt for variety
+  const prompt = generateRandomSuperheroPrompt();
 
   const response = await fetch(
     "https://openrouter.ai/api/v1/chat/completions",
