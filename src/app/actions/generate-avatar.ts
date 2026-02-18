@@ -210,6 +210,35 @@ const LIGHTING_STYLES = [
   "high-contrast comic book lighting",
 ];
 
+const HUMOROUS_ELEMENTS = [
+  "exaggerated superhero muscles that look comically oversized",
+  "a tiny sidekick animal with superpowers (flying cat, laser-eyed hamster, etc.)",
+  "dramatic wind blowing their hair/cape but everything else is still",
+  "overly dramatic hero pose that's slightly awkward or silly",
+  "wearing mismatched superhero accessories (boots too big, cape tangled, mask slightly crooked)",
+  "accidentally-on-purpose showing off (flexing, winking, finger guns)",
+  "a 'BOOM!' or 'POW!' comic book effect appearing behind them",
+  "carrying an absurdly mundane object as their 'weapon' (coffee mug, TV remote, rubber chicken)",
+  "their costume has a funny logo or symbol (like a pizza slice, WiFi symbol, or emoji)",
+  "doing a superhero landing but creating a tiny crack instead of big destruction",
+];
+
+// AI effects applied directly to the face/skin
+const FACE_AI_EFFECTS = [
+  "glowing electric circuit lines etched along the cheekbones and temples, pulsing with energy",
+  "eyes glowing with supernatural power — iris luminous, matching the hero's element (fire, lightning, ice, etc.)",
+  "holographic scan-line texture over the face, like a real-time AI rendering artifact",
+  "metallic cybernetic patches fused into the skin at the jaw and brow, chrome and organic blended",
+  "bioluminescent energy veins branching across the cheeks and forehead like glowing cracks of power",
+  "subtle digital fragmentation at the edges of the face — pixels dissolving into energy",
+  "constellation/star map projected onto the skin, following the natural bone structure of the face",
+  "neon tattoo-like power markings flowing from the eyes down the cheeks, pulsing with light",
+  "fractured crystal or ice forming over one side of the face, catching light dramatically",
+  "neural network nodes and connection lines mapped over the face, glowing blue or gold",
+  "smoke or plasma energy wisps rising from the eyes and dissipating into the air",
+  "augmented reality targeting HUD projected onto the face with fine reticle lines and readouts",
+];
+
 /**
  * Generate a randomized superhero transformation prompt
  */
@@ -220,28 +249,50 @@ function generateRandomSuperheroPrompt(): string {
   const pose = POSES[Math.floor(Math.random() * POSES.length)];
   const background = BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
   const lighting = LIGHTING_STYLES[Math.floor(Math.random() * LIGHTING_STYLES.length)];
+  const humor = HUMOROUS_ELEMENTS[Math.floor(Math.random() * HUMOROUS_ELEMENTS.length)];
+  const faceEffect = FACE_AI_EFFECTS[Math.floor(Math.random() * FACE_AI_EFFECTS.length)];
 
-  return `CRITICAL: You MUST preserve this person's exact facial features, face shape, skin tone, and identity. This is the MOST IMPORTANT requirement.
+  return `SUPERHERO FACE TRANSFORMATION — Based on the person in this photo.
 
-Transform this person into a unique superhero character - a ${theme}. Keep their face EXACTLY as it appears in the photo.
+== PRIORITY #1: FACE RESEMBLANCE (This is the most important requirement) ==
+The person's face from the uploaded photo MUST be IMMEDIATELY and UNMISTAKABLY recognizable in the output. A friend seeing the result must say "that's them!".
 
-FACE PRESERVATION (CRITICAL):
-- Keep the EXACT same face, facial structure, eyes, nose, mouth, jawline, and skin tone
-- This person's face must be 100% recognizable and identical to the original
-- Only add the superhero costume and effects around the face, not on the face itself
-- Do NOT change their facial features, expressions, or appearance in ANY way
+Preserve with absolute accuracy:
+- Eye shape, size, spacing, and color
+- Eyebrow thickness, arch, and placement
+- Nose bridge width, tip shape, and nostril flare
+- Lip shape, fullness, and cupid's bow
+- Jaw structure, cheekbone placement, and face shape
+- Skin tone and complexion
+- Any distinctive features: freckles, dimples, facial hair, glasses, birthmarks — keep all of them
+- Hair color, texture, and general style (can be stylized but must remain recognizable)
 
-COSTUME: Design a ${costume} with ${colors} color scheme around the person's body (not face).
+Think: Hollywood VFX superhero transformation. Not a different person. Not a lookalike. THE SAME PERSON — but transformed.
 
-POSE: Show them in a ${pose}, conveying power and heroism.
+== PRIORITY #2: CREATIVE AI EFFECTS APPLIED TO THE FACE ==
+Apply this effect directly onto their face and skin — NOT just the background:
+${faceEffect}
 
-BACKGROUND: Set against ${background}, creating an epic atmosphere.
+This must look like the AI has visually enhanced or altered their actual face with this effect — integrated naturally into their skin, eyes, or bone structure. It should feel like part of them, not a filter pasted on top.
 
-LIGHTING: Use ${lighting} to create dramatic depth while keeping the face clearly visible and recognizable.
+== SUPERHERO TRANSFORMATION ==
+- Hero type: ${theme}
+- Costume: ${costume} with ${colors} color scheme
+- The costume and gear should feel like a natural extension of this specific person's energy and personality
+- Add power effects, aura, or energy emanating from them that match the hero type
 
-STYLE: Professional comic book or movie poster aesthetic with photorealistic rendering. Maintain the original aspect ratio.
+== PERSONALITY & HUMOR ==
+- Add this playful element: ${humor}
+- Keep a sense of fun and personality — this is a superhero version of a real person, not a stock hero template
 
-REMEMBER: The person's face must look EXACTLY like the original photo. Only add superhero elements to their body, costume, and surroundings.`;
+== SCENE COMPOSITION ==
+- Pose: ${pose}
+- Background: ${background}
+- Lighting: ${lighting}
+- Style: Cinematic superhero movie poster quality, with visible AI/digital aesthetic woven throughout
+
+== FINAL GOAL ==
+The result should make the subject laugh and say: "That's absolutely me — but as a superhero!" — recognizable face, epic powers, creative AI transformation effects applied directly to their features.`;
 }
 
 /**
